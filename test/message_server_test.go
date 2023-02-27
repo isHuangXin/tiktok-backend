@@ -3,7 +3,7 @@ package test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/RaymondCode/simple-demo/controller"
+	"github.com/isHuangXin/tiktok-backend/api"
 	"io"
 	"net"
 	"testing"
@@ -20,7 +20,6 @@ func TestMessageServer(t *testing.T) {
 		fmt.Println("Connect server failed: #{err}\n")
 		return
 	}
-
 	connB, err := net.Dial("tcp", "127.0.0.1:8081")
 	if err != nil {
 		fmt.Println("Connect server failed: #{err}\n")
@@ -47,7 +46,7 @@ func readMessage(conn net.Conn) {
 			continue
 		}
 
-		var event = controller.MessagePushEvent{}
+		var event = api.MessagePushEvent{}
 		_ = json.Unmarshal(buf[:n], &event)
 		fmt.Println("Read message: #{event}\n")
 	}
@@ -58,7 +57,7 @@ func sendMessage(fromUserId int, toUserId int, fromConn net.Conn) {
 
 	for i := 0; i < 3; i++ {
 		time.Sleep(time.Second)
-		sendEvent := controller.MessageSendEvent{
+		sendEvent := api.MessageSendEvent{
 			UserId:     int64(fromUserId),
 			ToUserId:   int64(toUserId),
 			MsgContent: "Test Content",
@@ -74,11 +73,11 @@ func sendMessage(fromUserId int, toUserId int, fromConn net.Conn) {
 }
 
 func createChat(userIdA int, connA net.Conn, userIdB int, connB net.Conn) {
-	chatEventA := controller.MessageSendEvent{
+	chatEventA := api.MessageSendEvent{
 		UserId:   int64(userIdA),
 		ToUserId: int64(userIdB),
 	}
-	chatEventB := controller.MessageSendEvent{
+	chatEventB := api.MessageSendEvent{
 		UserId:   int64(userIdB),
 		ToUserId: int64(userIdA),
 	}
