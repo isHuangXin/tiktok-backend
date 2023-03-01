@@ -1,6 +1,6 @@
 package controller
 
-import "github.com/isHuangXin/tiktok-backend/api"
+import "github.com/isHuangxin/tiktok-backend/api"
 
 var DemoVideos = []api.Video{
 	{

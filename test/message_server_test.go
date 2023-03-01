@@ -3,7 +3,7 @@ package test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/isHuangXin/tiktok-backend/api"
+	"github.com/isHuangxin/tiktok-backend/api"
 	"io"
 	"net"
 	"testing"

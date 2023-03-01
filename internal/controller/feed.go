@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/isHuangXin/tiktok-backend/api"
+	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/isHuangxin/tiktok-backend/api"
 	"net/http"
 	"time"
 )
@@ -14,8 +15,8 @@ type FeedResponse struct {
 }
 
 // Feed same demo video list for every request
-func Feed(c *gin.Context) {
-	c.JSON(http.StatusOK, FeedResponse{
+func Feed(c context.Context, ctx *app.RequestContext) {
+	ctx.JSON(http.StatusOK, FeedResponse{
 		Response:  api.Response{StatusCode: 0},
 		VideoList: DemoVideos,
 		NextTime:  time.Now().Unix(),

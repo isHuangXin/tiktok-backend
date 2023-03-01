@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/isHuangXin/tiktok-backend/api"
+	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/isHuangxin/tiktok-backend/api"
 	"net/http"
 )
 
@@ -12,19 +13,19 @@ type UserListResponse struct {
 }
 
 // RelationAction no practical effect, just check if token is valid
-func RelationAction(c *gin.Context) {
-	token := c.Query("token")
+func RelationAction(c context.Context, ctx *app.RequestContext) {
+	token := ctx.Query("token")
 
 	if _, exist := usersLoginInfo[token]; exist {
-		c.JSON(http.StatusOK, api.Response{StatusCode: 0})
+		ctx.JSON(http.StatusOK, api.Response{StatusCode: 0})
 	} else {
-		c.JSON(http.StatusOK, api.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
+		ctx.JSON(http.StatusOK, api.Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
 	}
 }
 
 // FollowList all users have same follow list
-func FollowList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
+func FollowList(c context.Context, ctx *app.RequestContext) {
+	ctx.JSON(http.StatusOK, UserListResponse{
 		Response: api.Response{
 			StatusCode: 0,
 		},
@@ -33,8 +34,8 @@ func FollowList(c *gin.Context) {
 }
 
 // FollowerList all users have same follower list
-func FollowerList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
+func FollowerList(c context.Context, ctx *app.RequestContext) {
+	ctx.JSON(http.StatusOK, UserListResponse{
 		Response: api.Response{
 			StatusCode: 0,
 		},
@@ -43,8 +44,8 @@ func FollowerList(c *gin.Context) {
 }
 
 // FriendList all users have same list
-func FriendList(c *gin.Context) {
-	c.JSON(http.StatusOK, UserListResponse{
+func FriendList(c context.Context, ctx *app.RequestContext) {
+	ctx.JSON(http.StatusOK, UserListResponse{
 		Response: api.Response{
 			StatusCode: 0,
 		},
