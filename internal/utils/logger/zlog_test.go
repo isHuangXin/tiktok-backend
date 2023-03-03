@@ -1,11 +1,13 @@
 package logger
 
 import (
+	initialization "github.com/isHuangxin/tiktok-backend/init"
 	"github.com/rs/zerolog/log"
 	"testing"
 )
 
 func TestZLog(t *testing.T) {
+
 	log.Debug().Caller().
 		Str("Scale", "833 cents").
 		Float64("Interval", 833.09).
@@ -14,4 +16,13 @@ func TestZLog(t *testing.T) {
 	log.Debug().
 		Str("Name", "Tom").
 		Send()
+}
+
+func TestWriteToFileLog(t *testing.T) {
+	logConf := initialization.LogConfig{
+		LogFileWritten: true,
+		LogFilePath:    "testFile.txt",
+	}
+	InitLogger(logConf)
+	GlobalLogger.Print("Hello world")
 }

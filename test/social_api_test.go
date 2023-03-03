@@ -12,7 +12,7 @@ func TestRelation(t *testing.T) {
 	userIdA, tokenA := getTestUserToken(testUserA, e)
 	userIdB, tokenB := getTestUserToken(testUserB, e)
 
-	relationResp := e.POST("/douyin/relation/action").
+	relationResp := e.POST("/douyin/relation/action/").
 		WithQuery("token", tokenA).WithQuery("to_user_id", userIdB).WithQuery("action_type", 1).
 		WithFormField("token", tokenA).WithFormField("to_user_id", userIdB).WithFormField("action_type", 1).
 		Expect().
@@ -20,7 +20,7 @@ func TestRelation(t *testing.T) {
 		JSON().Object()
 	relationResp.Value("status_code").Number().Equal(0)
 
-	followListResp := e.GET("/douyin/relation/follow/list").
+	followListResp := e.GET("/douyin/relation/follow/list/").
 		WithQuery("token", tokenA).WithQuery("user_id", userIdA).
 		WithFormField("token", tokenA).WithFormField("user_id", userIdA).
 		Expect().
@@ -36,10 +36,9 @@ func TestRelation(t *testing.T) {
 			containTestUserB = true
 		}
 	}
-
 	assert.True(t, containTestUserB, "Follow test user failed")
 
-	followerListResp := e.GET("/douyin/relation/follower/list").
+	followerListResp := e.GET("/douyin/relation/follower/list/").
 		WithQuery("token", tokenB).WithQuery("user_id", userIdB).
 		WithFormField("token", tokenB).WithFormField("user_id", userIdB).
 		Expect().
@@ -64,7 +63,7 @@ func TestChat(t *testing.T) {
 	userIdA, tokenA := getTestUserToken(testUserA, e)
 	userIdB, tokenB := getTestUserToken(testUserB, e)
 
-	messageResp := e.POST("/douyin/message/action").
+	messageResp := e.POST("/douyin/message/action/").
 		WithQuery("token", tokenA).WithQuery("to_user_id", userIdB).WithQuery("action_type", 1).WithQuery("content", "Send to UserB").
 		WithFormField("token", tokenA).WithFormField("to_user_id", userIdB).WithFormField("action_type", 1).WithQuery("content", "Send to UserB").
 		Expect().

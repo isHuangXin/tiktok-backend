@@ -5,7 +5,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	initialization "github.com/isHuangxin/tiktok-backend/init"
 	"github.com/isHuangxin/tiktok-backend/init/router"
-	"github.com/isHuangxin/tiktok-backend/internal/dao"
 	"github.com/isHuangxin/tiktok-backend/internal/utils/jwt"
 	"github.com/isHuangxin/tiktok-backend/internal/utils/logger"
 )
@@ -16,9 +15,9 @@ func initAll() {
 	initialization.InitDB()
 	initialization.InitOSS()
 	initialization.InitRDB()
-	dao.DataBaseInitialization()
+	logger.InitLogger(initialization.LogConf)
+
 	jwt.InitJwt()
-	logger.InitFileLogger(initialization.LogConf)
 }
 
 // 用于单机的极简版抖音后端程序

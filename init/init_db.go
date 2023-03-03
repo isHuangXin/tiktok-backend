@@ -7,10 +7,11 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"time"
 )
 
 func InitDB() {
-	StdOutLogger.Print("In InitDataBase")
+	stdOutLogger.Print("In InitDataBase")
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		dbUser,
 		dbPassWord,
@@ -37,12 +38,18 @@ func InitDB() {
 	})
 
 	if err != nil {
-		StdOutLogger.Panic().Caller().Str("数据库初始化失败", err.Error())
+		stdOutLogger.Panic().Caller().Str("数据库初始化失败", err.Error())
 	}
 
 	err = db.AutoMigrate(&model.Video{}, &model.User{}, &model.Follow{}, &model.Comment{}, &model.Favourite{}, &model.Message{}) //数据库自动迁移
 
 	if err != nil {
-		StdOutLogger.Panic().Caller().Str("数据库自动迁移失败", err.Error())
+		stdOutLogger.Panic().Caller().Str("数据库自动迁移失败", err.Error())
 	}
+
+	sqlDb, _ := db.DB()
+
+	sqlDb.SetMaxIdleConns(50)
+	sqlDb.SetMaxOpenConns(100)
+	sqlDb.SetConnMaxLifetime(10 * time.Second)
 }

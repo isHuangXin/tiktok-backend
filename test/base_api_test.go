@@ -28,9 +28,9 @@ func TestUserAction(t *testing.T) {
 	e := newExpect(t)
 
 	rand.Seed(time.Now().UnixNano())
-	registerValue := fmt.Sprintf("douyin#{rand.Intn(65536)}")
+	registerValue := fmt.Sprintf("douyin%d", rand.Intn(65536))
 
-	registerResp := e.POST("/douyin/user/register").
+	registerResp := e.POST("/douyin/user/register/").
 		WithQuery("username", registerValue).WithQuery("password", registerValue).
 		WithFormField("username", registerValue).WithFormField("password", registerValue).
 		Expect().
@@ -40,24 +40,22 @@ func TestUserAction(t *testing.T) {
 	registerResp.Value("user_id").Number().Gt(0)
 	registerResp.Value("token").String().Length().Gt(0)
 
-	loginResp := e.POST("/douyin/user/login").
+	loginResp := e.POST("/douyin/user/login/").
 		WithQuery("username", registerValue).WithQuery("password", registerValue).
 		WithFormField("username", registerValue).WithFormField("password", registerValue).
 		Expect().
 		Status(http.StatusOK).
 		JSON().Object()
-
 	loginResp.Value("status_code").Number().Equal(0)
 	loginResp.Value("user_id").Number().Gt(0)
 	loginResp.Value("token").String().Length().Gt(0)
 
 	token := loginResp.Value("token").String().Raw()
-	userResp := e.GET("/douyin/user").
+	userResp := e.GET("/douyin/user/").
 		WithQuery("token", token).
 		Expect().
 		Status(http.StatusOK).
 		JSON().Object()
-
 	userResp.Value("status_code").Number().Equal(0)
 	userInfo := userResp.Value("user").Object()
 	userInfo.NotEmpty()

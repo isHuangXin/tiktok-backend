@@ -15,14 +15,14 @@ func TestMessageServer(t *testing.T) {
 	userIdA, _ := getTestUserToken(testUserA, e)
 	userIdB, _ := getTestUserToken(testUserB, e)
 
-	connA, err := net.Dial("tcp", "127.0.0.1:8081")
+	connA, err := net.Dial("tcp", "127.0.0.1:9090")
 	if err != nil {
-		fmt.Println("Connect server failed: #{err}\n")
+		fmt.Printf("Connect server failed: %v\n", err)
 		return
 	}
-	connB, err := net.Dial("tcp", "127.0.0.1:8081")
+	connB, err := net.Dial("tcp", "127.0.0.1:9090")
 	if err != nil {
-		fmt.Println("Connect server failed: #{err}\n")
+		fmt.Printf("Connect server failed: %v\n", err)
 		return
 	}
 
@@ -42,13 +42,13 @@ func readMessage(conn net.Conn) {
 			if err == io.EOF {
 				break
 			}
-			fmt.Println("Read message failed: #{err}\n")
+			fmt.Printf("Read message failed: %v\n", err)
 			continue
 		}
 
 		var event = api.MessagePushEvent{}
 		_ = json.Unmarshal(buf[:n], &event)
-		fmt.Println("Read message: #{event}\n")
+		fmt.Printf("Read message：%+v\n", event)
 	}
 }
 

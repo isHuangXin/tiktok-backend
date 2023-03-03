@@ -3,14 +3,13 @@ package controller
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/isHuangxin/tiktok-backend/api"
-	"github.com/isHuangxin/tiktok-backend/internal/model"
 	"github.com/isHuangxin/tiktok-backend/internal/service"
+	"github.com/isHuangxin/tiktok-backend/internal/utils/constants"
 	"github.com/isHuangxin/tiktok-backend/internal/utils/jwt"
+	"strconv"
 )
 
 // usersLoginInfo use map to store user info, and key is username + password for demo
@@ -49,12 +48,57 @@ func Register(c context.Context, ctx *app.RequestContext) {
 			})
 		}
 	}
+
 	jwt.JwtMiddleware.LoginHandler(c, ctx)
 }
 
 func UserInfo(c context.Context, ctx *app.RequestContext) {
-	user, _ := ctx.Get(jwt.IdentityKey)
-	ctx.JSON(consts.StatusOK, utils.H{
-		"message": fmt.Sprintf("username:%v", user.(*model.User).UserName),
+	var err error
+	_, err = jwt.GetUserId(c, ctx)
+	if err != nil {
+		ctx.JSON(consts.StatusOK, api.UserResponse{
+			Response: api.Response{
+				StatusCode: int32(api.TokenInvalidErr),
+				StatusMsg:  api.ErrorCodeToMsg[api.TokenInvalidErr],
+			},
+		})
+		return
+	}
+
+	userIdStr := ctx.Query("user_id")
+	userId, err := strconv.ParseInt(userIdStr, 10, 64)
+	if err != nil {
+		ctx.JSON(consts.StatusOK, api.UserResponse{
+			Response: api.Response{
+				StatusCode: int32(api.InputFormatCheckErr),
+				StatusMsg:  api.ErrorCodeToMsg[api.InputFormatCheckErr],
+			},
+		})
+		return
+	}
+
+	queryUser, err := service.GetUserServiceInstance().GetUserByUserId(userId)
+	if errors.Is(constants.UserNotExistErr, err) {
+		ctx.JSON(consts.StatusOK, api.UserResponse{
+			Response: api.Response{
+				StatusCode: int32(api.UserNotExistErr),
+				StatusMsg:  api.ErrorCodeToMsg[api.UserNotExistErr],
+			},
+		})
+		return
+	}
+
+	ctx.JSON(consts.StatusOK, api.UserResponse{
+		Response: api.Response{
+			StatusCode: 0,
+			StatusMsg:  "",
+		},
+		User: api.User{
+			Id:            queryUser.UserID,
+			Name:          queryUser.UserName,
+			FollowCount:   queryUser.FollowCount,
+			FollowerCount: queryUser.FollowerCount,
+			IsFollow:      false,
+		},
 	})
 }

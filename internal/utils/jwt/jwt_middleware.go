@@ -8,9 +8,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/jwt"
 	"github.com/isHuangxin/tiktok-backend/api"
-	initialization "github.com/isHuangxin/tiktok-backend/init"
 	"github.com/isHuangxin/tiktok-backend/internal/model"
 	"github.com/isHuangxin/tiktok-backend/internal/service"
+	"github.com/isHuangxin/tiktok-backend/internal/utils/logger"
 	"net/http"
 	"time"
 )
@@ -61,16 +61,14 @@ func InitJwt() {
 		},
 		Authenticator: func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
 			var userStruct UserStruct
-
 			if err := c.BindAndValidate(&userStruct); err != nil {
 				return nil, err
 			}
-
 			userInfo, err := service.GetUserServiceInstance().CheckUserInfo(userStruct.Username, userStruct.Password)
+
 			if err != nil {
 				return nil, err
 			}
-
 			return userInfo, nil
 		},
 		IdentityKey: IdentityKey,
@@ -101,6 +99,6 @@ func InitJwt() {
 	})
 
 	if err != nil {
-		initialization.StdOutLogger.Error().Str("JWT初始化错误", err.Error())
+		logger.GlobalLogger.Error().Str("JWT初始化错误", err.Error())
 	}
 }
