@@ -35,6 +35,7 @@ var (
 )
 
 func GetPublishServiceInstance() *publishService {
+	initRedis()
 	publishOnce.Do(func() {
 		publishServiceInstance = &publishService{}
 	})
@@ -80,6 +81,7 @@ func (p *publishService) PublishInfo(data *multipart.FileHeader, userId int64, t
 	if !files.CheckFileSize(data.Size) {
 		return constants.VideoSizeErr
 	}
+
 	logger.GlobalLogger.Print("Start Saving")
 	//然后将文件保存至本地
 	saveDir := path.Join(initialization.VideoConf.SavePath, strconv.FormatInt(userId, 10))
