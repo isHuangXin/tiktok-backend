@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "github.com/isHuangxin/tiktok-backend/api/rpc_controller_service/favorite/route";
+
+package route;
+
+service UserInfo {
+
+}

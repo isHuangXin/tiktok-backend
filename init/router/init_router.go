@@ -6,6 +6,7 @@ import (
 	"github.com/isHuangxin/tiktok-backend/internal/utils/jwt"
 )
 
+// InitRouter 初始化hertz服务器路由
 func InitRouter(hertz *server.Hertz) {
 
 	// 用户注册与登录需要进行鉴权, Feed可授权可不授权
@@ -34,5 +35,4 @@ func InitRouter(hertz *server.Hertz) {
 	auth.GET("/relation/friend/list/", controller.FriendList)
 	auth.GET("/message/chat/", controller.MessageChat)
 	auth.POST("/message/action/", controller.MessageAction)
-
 }

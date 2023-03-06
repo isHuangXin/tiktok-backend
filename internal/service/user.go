@@ -50,7 +50,7 @@ func (u *userService) UserRegisterInfo(username, password string) error {
 		UserName: username,
 	}
 
-	if initialization.UserConf.PasswordEncrpted {
+	if initialization.UserConf.PasswordEncrypted {
 		user.PassWord = md5.MD5(password)
 	} else {
 		user.PassWord = password

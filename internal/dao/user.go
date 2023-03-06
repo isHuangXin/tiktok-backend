@@ -17,7 +17,6 @@ var (
 )
 
 func GetUserDaoInstance() *userDao {
-	dataBaseInitialization()
 	userOnce.Do(func() {
 		userDaoInstance = &userDao{}
 	})

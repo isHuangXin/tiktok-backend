@@ -131,6 +131,6 @@ func (p *publishService) PublishListInfo(userId, loginUserId int64) ([]api.Video
 	if err != nil {
 		return nil, err
 	}
-	apiVideos, err := newVideoList(loginUserId, videoList)
+	apiVideos, err := getVideoListByModel(loginUserId, videoList)
 	return apiVideos, nil
 }
